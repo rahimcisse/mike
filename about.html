@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top predictions</title>
+    
+    <!-- Using Phosphor Icons for modern, lightweight icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href='index.css' rel='stylesheet'>
+    <link rel="icon" href="icon.jpg" type="image/jpg">
+    <style>
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <img src="logo.png" alt="" style="height: 70px">
+                <p style="color: #16def9;;">MICK'S PREDICTIONS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <i class="ph ph-list"></i>
+                </div>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="todays_games.html">Todays games</a></li>
+                    <li><a href="past_wins.html">Past wins</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero" style="height: 50vh; min-height: 400px;">
+        <div class="container hero-content">
+            <h1>WHO WE ARE</h1>
+            <p>Combining engineering precision with sports analytics to deliver top-tier predictions.</p>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image hidden">
+                    <img src="bgg.jpg" alt="Stadium Analysis">
+                </div>
+                <div class="about-text hidden">
+                    <h3>Our Mission</h3>
+                    <p>At Mick's Predictions, we don't believe in luck. We believe in data. Our team utilizes advanced modeling techniques to provide the most accurate football predictions in the industry.</p>
+                    <p style="margin-top: 15px;">Whether you are looking for safe bankers or high-reward correct scores, we provide the research so you can win big with confidence.</p>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <h4>85%</h4>
+                            <p>Win Rate</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>5k+</h4>
+                            <p>Active Members</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>24/7</h4>
+                            <p>Support</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col" style="flex: 2; min-width: 250px;">
+                    <img src="logo.png" style="height: 70px;" alt="Logo">
+                    <h4>MICK'S PREDICTIONS</h4>
+                    <p>Join our community today and start winning big.</p>
+                </div>
+                <div class="footer-col" style="flex: 1;">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="updates.html">Past Wins</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col" style="flex: 1;">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="ph ph-telegram-logo"></i></a>
+                        <a href="#"><i class="ph ph-twitter-logo"></i></a>
+                        <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 Mick's Predictions. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Re-using your mobile menu logic
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = hamburger.querySelector('i');
+            icon.classList.toggle('ph-list');
+            icon.classList.toggle('ph-x');
+        });
+
+        // Re-using your Scroll Reveal logic
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.hidden').forEach((el) => observer.observe(el));
+    </script>
+</body>
+</html>
