@@ -193,6 +193,75 @@
             font-size: 11px;
             color: #a0a8b1;
         }
+        .checkout-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .amount-display {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin: 8px 0;
+        }
+        .label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .phone-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .phone-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .pay-button {
+            width: 100%;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .pay-button:hover {
+            background-color: #2563eb;
+        }
+        .pay-button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+        .network-indicator {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+            display: block;
+        }
 
         /* MOBILE */
         @media (max-width: 750px) {
@@ -240,6 +309,7 @@
                 padding: 25px 20px;
             }
         }
+
     </style>
 </head>
 
@@ -251,7 +321,7 @@
         <div class="payment-info">
 
             <div class="logo">
-                Paystack
+                StakeVision
             </div>
 
             <h1>Complete your payment</h1>
@@ -281,7 +351,7 @@
                 <p>Enter your card information below.</p>
             </div>
 
-            <form>
+            <form id="paymentForm" onsubmit="processPayment(event)">
 
                 <div class="form-group">
                     <label for="email">Email address</label>
@@ -293,48 +363,13 @@
                     >
                 </div>
 
-                <div class="form-group">
-                    <label for="card">Phone Number</label>
-
-                    <div class="card-input">
-                        <input
-                            type="text"
-                            id="card"
-                            placeholder="000 000 00000"
-                            maxlength="10"
-                            required
-                        >
-
-                        <span class="card-icon">💵</span>
-                    </div>
+                <div class="form-group input-group">
+                    <label class="label" for="phone">Mobile Money Number</label>
+                    <input type="tel" id="phone" class="phone-input" placeholder="e.g. 0241234567" maxlength="10" pattern="[0-9]{10}" required oninput="detectNetwork()">
+                    <span id="networkText" class="network-indicator"></span>
                 </div>
 
-                <div class="form-group">
-                    <label for="card">Amount</label>
-
-                    <div class="card-input">
-                        <input
-                            type="text"
-                            id="card"
-                            placeholder="GH"
-                            maxlength="4"
-                            required
-                        >
-
-                    
-                    </div>
-                </div>
-
-                <div class="card-row">
-
-
-
-
-                    
-
-                </div>
-
-                <button type="submit" class="pay-button">
+                <button type="submit" id="submitBtn" class="pay-button">
                     Pay GH₵ 50.00
                 </button>
 
@@ -356,6 +391,63 @@
         </div>
 
     </div>
+<!-- Paystack Inline Script -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+    // Simple helper to guess Ghana telecom network prefixes
+    function detectNetwork() {
+        const phone = document.getElementById('phone').value;
+        const textElement = document.getElementById('networkText');
+        
+        if (phone.length >= 3) {
+            const prefix = phone.substring(0, 3);
+            if (['024', '054', '055', '059', '025', '053'].includes(prefix)) {
+                textElement.innerText = "Detected: MTN Mobile Money";
+            } else if (['020', '050'].includes(prefix)) {
+                textElement.innerText = "Detected: Telecel Cash (Vodafone)";
+            } else if (['026', '027', '057', '056'].includes(prefix)) {
+                textElement.innerText = "Detected: AT Money (AirtelTigo)";
+            } else {
+                textElement.innerText = "";
+            }
+        } else {
+            textElement.innerText = "";
+        }
+    }
+
+    function processPayment(event) {
+        event.preventDefault();
+        
+        const customerEmail = document.getElementById('email').value;
+        const btn = document.getElementById('submitBtn');
+        
+        btn.disabled = true;
+        btn.innerText = "Initializing Checkout...";
+
+        let handler = PaystackPop.setup({
+            key: 'pk_test_2d73ef8f61763323f47dc380fd143106037817a1', // Use your public test key (starts with pk_test_)
+            email: customerEmail,
+            amount: 5000, // 50 GHS translated to 5000 Pesewas
+            currency: 'GHS',
+            channels: ['mobile_money'], // Bypasses card options entirely to focus on MoMo
+            ref: 'momo_50ghs_' + Math.floor((Math.random() * 100000000) + 1),
+            
+            onClose: function() {
+                alert('Payment canceled by user.');
+                btn.disabled = false;
+                btn.innerText = "Pay GH₵ 50.00";
+            },
+            callback: function(response) {
+                alert('Authorization checklist sent! Paystack Ref: ' + response.reference);
+                // Optional: Send response.reference to your backend verification route here
+                btn.disabled = false;
+                btn.innerText = "Pay GH₵ 50.00";
+            }
+        });
+        
+        handler.openIframe();
+    }
+</script>
 
 </body>
 </html>
