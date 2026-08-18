@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Paystack</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+            color: #1f2937;
+        }
+
+        .payment-container {
+            width: 100%;
+            max-width: 950px;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            display: grid;
+            grid-template-columns: 38% 62%;
+        }
+
+        /* LEFT SIDE */
+        .payment-info {
+            background: #011b33;
+            color: white;
+            padding: 45px 35px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: 700;
+            color: #00c3a5;
+            margin-bottom: 55px;
+        }
+
+        .payment-info h1 {
+            font-size: 30px;
+            line-height: 1.2;
+            margin-bottom: 15px;
+        }
+
+        .payment-info p {
+            color: #b8c4d0;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .amount {
+            margin-top: 40px;
+            padding: 22px 0;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .amount span {
+            display: block;
+            color: #9eacb9;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .amount strong {
+            font-size: 32px;
+            color: white;
+        }
+
+        .secure {
+            margin-top: auto;
+            padding-top: 40px;
+            font-size: 13px;
+            color: #aebbc7;
+        }
+
+        /* RIGHT SIDE */
+        .payment-form {
+            padding: 45px 50px;
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid #d9dee5;
+            border-radius: 6px;
+            padding: 0 14px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #00c3a5;
+            box-shadow: 0 0 0 3px rgba(0, 195, 165, 0.1);
+        }
+
+        .card-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .card-input {
+            position: relative;
+        }
+
+        .card-icon {
+            position: absolute;
+            right: 14px;
+            top: 15px;
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        .pay-button {
+            width: 100%;
+            height: 52px;
+            border: none;
+            border-radius: 6px;
+            background: #00c3a5;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.25s;
+            margin-top: 8px;
+        }
+
+        .pay-button:hover {
+            background: #00ad94;
+            transform: translateY(-1px);
+        }
+
+        .payment-methods {
+            margin-top: 25px;
+            text-align: center;
+            color: #8b95a1;
+            font-size: 12px;
+        }
+
+        .methods {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #59636e;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 11px;
+            color: #a0a8b1;
+        }
+
+        /* MOBILE */
+        @media (max-width: 750px) {
+            body {
+                padding: 15px;
+            }
+
+            .payment-container {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-info {
+                padding: 30px 25px;
+            }
+
+            .logo {
+                margin-bottom: 30px;
+            }
+
+            .payment-info h1 {
+                font-size: 25px;
+            }
+
+            .amount {
+                margin-top: 25px;
+            }
+
+            .secure {
+                margin-top: 25px;
+                padding-top: 10px;
+            }
+
+            .payment-form {
+                padding: 30px 25px;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .card-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .payment-form {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="payment-container">
+
+        <!-- LEFT SIDE -->
+        <div class="payment-info">
+
+            <div class="logo">
+                Paystack
+            </div>
+
+            <h1>Complete your payment</h1>
+
+            <p>
+                You're making a secure payment. Enter your payment
+                information to complete your transaction.
+            </p>
+
+            <div class="amount">
+                <span>Amount to pay</span>
+                <strong>GH₵ 50.00</strong>
+            </div>
+
+            <div class="secure">
+                🔒 Your payment information is encrypted and secure.
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="payment-form">
+
+            <div class="form-header">
+                <h2>Payment details</h2>
+                <p>Enter your card information below.</p>
+            </div>
+
+            <form>
+
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="you@example.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="card">Phone Number</label>
+
+                    <div class="card-input">
+                        <input
+                            type="text"
+                            id="card"
+                            placeholder="000 000 00000"
+                            maxlength="10"
+                            required
+                        >
+
+                        <span class="card-icon">💵</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="card">Amount</label>
+
+                    <div class="card-input">
+                        <input
+                            type="text"
+                            id="card"
+                            placeholder="GH"
+                            maxlength="4"
+                            required
+                        >
+
+                    
+                    </div>
+                </div>
+
+                <div class="card-row">
+
+
+
+
+                    
+
+                </div>
+
+                <button type="submit" class="pay-button">
+                    Pay GH₵ 50.00
+                </button>
+
+            </form>
+
+            <div class="payment-methods">
+                We accept
+                <div class="methods">
+                    <span>💳 Cards</span>
+                    <span>📱 Mobile Money</span>
+                    <span>🏦 Bank</span>
+                </div>
+            </div>
+
+            <div class="footer">
+                Powered by Paystack
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

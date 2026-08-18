@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Paystack Integration</title>
+    <!-- 1. Load the Paystack Inline JS library -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+</head>
+<body>
+
+    <h2>Checkout Page</h2>
+    
+    <!-- 2. Create the payment form -->
+    <form id="paymentForm">
+        <label for="email">Email Address:</label>
+        <input type="email" id="email-address" required />
+
+        <label for="amount">Amount (GHS):</label>
+        <input type="number" id="amount" required />
+
+        <button type="submit">Pay Now</button>
+    </form>
+
+    <!-- 3. Handle the payment logic -->
+    <script>
+        const paymentForm = document.getElementById('paymentForm');
+
+        paymentForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById("email-address").value.trim();
+            const amountValue = Number(document.getElementById("amount").value);
+
+            if (!email || !amountValue || amountValue <= 0) {
+                alert('Please enter a valid email and amount.');
+                return;
+            }
+
+            // Paystack accepts amounts in the lowest currency unit (pesewas/kobo).
+            // Multiply your amount by 100 to convert to full currency units.
+            const amountInPesewas = Math.round(amountValue * 100);
+
+            // Initialize the Paystack Pop checkout widget
+            const popup = new PaystackPop();
+
+            popup.newTransaction({
+                key: 'pk_test_2d73ef8f61763323f47dc380fd143106037817a1',
+                email: email,
+                amount: amountInPesewas,
+                currency: 'GHS',
+
+                onSuccess: function(transaction) {
+                    alert('Payment successful! Reference: ' + transaction.reference);
+                },
+
+                onCancel: function() {
+                    alert('Payment window closed by user.');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

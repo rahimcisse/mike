@@ -312,7 +312,7 @@
 
         .research-item img {
             width: 100%;
-            height: 100%;
+            height:100%;
             object-fit: cover;
             transition: transform 0.5s ease;
         }
@@ -322,7 +322,7 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            background: linear-gradient(transparent, rgba(12, 222, 250, 0.9));
             padding: 20px;
             transform: translateY(0);
             transition: var(--transition);
