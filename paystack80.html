@@ -333,7 +333,7 @@
 
             <div class="amount">
                 <span>Amount to pay</span>
-                <strong>GH₵ 50.00</strong>
+                <strong>GH₵ 80.00</strong>
             </div>
 
             <div class="secure">
@@ -370,7 +370,7 @@
                 </div>
 
                 <button type="submit" id="submitBtn" class="pay-button">
-                    Pay GH₵ 50.00
+                    Pay GH₵ 80.00
                 </button>
 
             </form>
@@ -427,21 +427,21 @@
         let handler = PaystackPop.setup({
             key: 'pk_test_2d73ef8f61763323f47dc380fd143106037817a1', // Use your public test key (starts with pk_test_)
             email: customerEmail,
-            amount: 5000, // 50 GHS translated to 5000 Pesewas
+            amount: 8000, // 50 GHS translated to 5000 Pesewas
             currency: 'GHS',
             channels: ['mobile_money'], // Bypasses card options entirely to focus on MoMo
-            ref: 'momo_50ghs_' + Math.floor((Math.random() * 100000000) + 1),
+            ref: 'momo_80ghs_' + Math.floor((Math.random() * 100000000) + 1),
             
             onClose: function() {
                 alert('Payment canceled by user.');
                 btn.disabled = false;
-                btn.innerText = "Pay GH₵ 50.00";
+                btn.innerText = "Pay GH₵ 80.00";
             },
             callback: function(response) {
                 alert('Authorization checklist sent! Paystack Ref: ' + response.reference);
                 // Optional: Send response.reference to your backend verification route here
                 btn.disabled = false;
-                btn.innerText = "Pay GH₵ 50.00";
+                btn.innerText = "Pay GH₵ 80.00";
             }
         });
         
