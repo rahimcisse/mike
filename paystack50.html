@@ -430,7 +430,7 @@
             amount: 5000, // 50 GHS translated to 5000 Pesewas
             currency: 'GHS',
             channels: ['mobile_money'], // Bypasses card options entirely to focus on MoMo
-            ref: 'momo_50ghs_' + Math.floor((Math.random() * 100000000) + 1),
+            ref: 'StakeVisionBet_50ghs_id:' + Math.floor((Math.random() * 100000000) + 1),
             
             onClose: function() {
                 alert('Payment canceled by user.');
@@ -438,7 +438,7 @@
                 btn.innerText = "Pay GH₵ 50.00";
             },
             callback: function(response) {
-                alert('Authorization checklist sent! Paystack Ref: ' + response.reference);
+                
                 // Optional: Send response.reference to your backend verification route here
                 btn.disabled = false;
                 btn.innerText = "Pay GH₵ 50.00";
