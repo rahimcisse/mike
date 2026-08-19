@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeVisionBet</title>
+    
+    <!-- Using Phosphor Icons for modern, lightweight icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href='index.css' rel='stylesheet'>
+    <link rel="icon" href="icon.jpg" type="image/jpg">
+    <style>
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                <p style="color: #16def9;;">StakeVisionBet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <i class="ph ph-list"></i>
+                </div>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="todays_games.html">Todays games</a></li>
+                    <li><a href="past_wins.html">Past wins</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+<section id="programs">
+        <div class="container">
+            <div class="section-title">
+                <h2 style="color: whitesmoke;">TODAY'S DRAW GAMES</h2>
+                <span></span>
+            </div>
+            <div class="program-cards">
+                <div class="card hidden">
+                    <div class="card-icon"><i class="ph ph-soccer-ball"></i></div>
+                    <h3>High Reward Games</h3>
+                    <ul>
+                        <li>Real Madrid vs Man City - <strong>3 : 3</strong></li>
+                        <li>Arsenal vs Bayern - <strong>6 : 6</strong></li>
+                        <li>Odds: 37.45</li>
+                    </ul>
+                    <a onclick="myFunction(78910)" class="btn" style="margin-top: 15px; width: 100%; text-align: center;">COPY BOOKING CODE</a>
+                </div>
+                <div class="card hidden">
+                    <div class="card-icon"><i class="ph ph-chart-line-up"></i></div>
+                    <h3>Safe Banker</h3>
+                    <ul>
+                        <li>PSG vs Barcelona - <strong> 9 : 9</strong></li>
+                        <li>Leverkusen vs West Ham - <strong>2 : 2</strong></li>
+                        <li>Odds: 30.10</li>
+                    </ul>
+                    <a onclick="myFunction(123456)" class="btn" style="margin-top: 15px; width: 100%; text-align: center;">COPY BOOKING CODE</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</body>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col" style="flex: 2; min-width: 250px;">
+                    <h4>StakeVisionBet</h4>
+                    <p>JOIN US <br>Lets win big</p>
+                </div>
+                <div class="footer-col" style="flex: 1;">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="todays_games.html">Todays Games</a></li>
+                        <li><a href="past_wins.html">Past Wins</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col" style="flex: 1;">
+                    <h4>Connect with us via</h4>
+                    <div class="social-links">
+                        <a href="https://gh.linkedin.com/in/mesa-uenr-69a15a229"><i class="ph ph-linkedin-logo"></i></a>
+                        <a href="https://x.com/MesaUenr"><i class="ph ph-twitter-logo"></i></a>
+                        <a href="https://www.instagram.com/mesa_uenr/"><i class="ph ph-instagram-logo"></i></a>
+                        <a href="https://www.facebook.com/p/MESA-UENR-Dept-of-Mech-Manufacturing-Eng-of-UENR-100069523115478/"><i class="ph ph-facebook-logo"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 StakeVisionBet -. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Mobile Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const navItems = document.querySelectorAll('.nav-links a');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            // Change icon based on state
+            const icon = hamburger.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('ph-list');
+                icon.classList.add('ph-x');
+            } else {
+                icon.classList.remove('ph-x');
+                icon.classList.add('ph-list');
+            }
+        });
+
+        // Close mobile menu when a link is clicked
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    const icon = hamburger.querySelector('i');
+                    icon.classList.remove('ph-x');
+                    icon.classList.add('ph-list');
+                }
+            });
+        });
+
+        // Scroll Reveal Animation
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                }
+            });
+        }, observerOptions);
+
+        const hiddenElements = document.querySelectorAll('.hidden');
+        hiddenElements.forEach((el) => observer.observe(el));
+        function myFunction(code) {
+            // Ensure code is a string
+            const text = String(code);
+
+            // Prefer navigator.clipboard when available
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Copied the text: ' + text);
+                }).catch((err) => {
+                    // Fallback to textarea method on error
+                    fallbackCopy(text);
+                });
+                return;
+            }
+
+            // Fallback for older browsers
+            fallbackCopy(text);
+        }
+
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            // Move the textarea off-screen
+            textarea.style.position = 'fixed';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert('Booking Code Copied : ' + text);
+                } else {
+                    alert('Unable to copy. Please select and copy manually.');
+                }
+            } catch (err) {
+                alert('Copy failed: ' + err);
+            }
+
+            document.body.removeChild(textarea);
+        }
+    </script>
