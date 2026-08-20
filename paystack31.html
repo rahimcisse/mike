@@ -333,7 +333,7 @@
 
             <div class="amount">
                 <span>Amount to pay</span>
-                <strong>GH₵ 50.00</strong>
+                <strong>GH₵ 30.00</strong>
             </div>
 
             <div class="secure">
@@ -341,6 +341,7 @@
             </div>
 
         </div>
+
 
 
         <!-- RIGHT SIDE -->
@@ -365,7 +366,7 @@
 
 
                 <button type="submit" id="submitBtn" class="pay-button">
-                    Pay GH₵ 50.00
+                    Pay GH₵ 30.00
                 </button>
 
             </form>
@@ -422,20 +423,19 @@
         let handler = PaystackPop.setup({
             key: 'pk_test_2d73ef8f61763323f47dc380fd143106037817a1', // Use your public test key (starts with pk_test_)
             email: customerEmail,
-            amount: 5000, // 50 GHS translated to 5000 Pesewas
+            amount: 3000, // 50 GHS translated to 5000 Pesewas
             currency: 'GHS',
-            ref: 'StakeVisionBet_50ghs_id_' + Math.floor((Math.random() * 100000000) + 1),
-
+            ref: 'StakeVisionBet_30ghs_id_' + Math.floor((Math.random() * 100000000) + 1),
+            
             onClose: function() {
                 btn.disabled = false;
-                btn.innerText = "Pay GH₵ 50.00";
+                btn.innerText = "Pay GH₵ 30.00";
             },
             callback: function(response) {
-                
                 // Optional: Send response.reference to your backend verification route here
                 btn.disabled = false;
-                btn.innerText = "Pay GH₵ 50.00";
-                window.location.href = '/golden.html';
+                btn.innerText = "Pay GH₵ 30.00";
+                window.location.href = '/acca.html'
             }
         });
         
