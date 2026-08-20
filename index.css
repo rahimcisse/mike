@@ -492,6 +492,175 @@
             font-size: 0.9rem;
         }
 
+        /* --- PAST WINS PAGE STYLING --- */
+        body.past-wins-page {
+            background: radial-gradient(circle at top, rgba(22, 222, 249, 0.15), transparent 30%),
+                        linear-gradient(135deg, #f4fbff 0%, #edf4fb 45%, #e9eefc 100%);
+            color: var(--text-dark);
+        }
+
+
+        .wins-hero {
+            padding: 72px 0 40px;
+            background: linear-gradient(135deg, rgba(2, 119, 162, 0.7), rgba(67, 79, 82, 0.7));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wins-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url('bgg.jpg') center/cover no-repeat;
+            opacity: 0.18;
+        }
+
+        .wins-hero .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .wins-badge {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 999px;
+            background: rgba(22, 222, 249, 0.16);
+            border: 1px solid rgba(22, 222, 249, 0.4);
+            color: #dffcff;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .wins-hero h1 {
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            margin-bottom: 14px;
+            color: var(--white);
+        }
+
+        .wins-hero p {
+            color: rgba(255,255,255,0.8);
+            max-width: 680px;
+            margin: 0 auto 28px;
+            font-size: 1.08rem;
+        }
+
+        .wins-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(180px, 1fr));
+            gap: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .summary-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 18px;
+            padding: 22px 18px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 20px 35px rgba(15, 23, 42, 0.15);
+        }
+
+        .summary-label {
+            display: block;
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+        }
+
+        .summary-box strong {
+            font-size: clamp(1.4rem, 2.5vw, 2.1rem);
+            color: var(--white);
+        }
+
+        .wins-showcase {
+            padding-top: 40px;
+            padding-bottom: 90px;
+        }
+
+        .wins-showcase .section-title {
+            margin-bottom: 2.5rem;
+        }
+
+        .win-card {
+            padding: 28px 24px;
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,249,255,0.96));
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+        }
+
+        .win-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 50px rgba(22, 222, 249, 0.12);
+        }
+
+        .win-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(22, 222, 249, 0.12);
+            color: #0a7183;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status {
+            color: #0d9d61;
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+
+        .win-card h3 {
+            color: var(--primary-color);
+            font-size: 1.75rem;
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            color: var(--secondary-color);
+            margin-bottom: 18px;
+        }
+
+        .win-foot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding-top: 18px;
+            border-top: 1px solid rgba(148, 163, 184, 0.25);
+            color: var(--primary-color);
+        }
+
+        .win-foot span {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .win-foot strong {
+            color: #0b7c27;
+            font-size: 1.02rem;
+        }
+
         /* --- RESPONSIVE MEDIA QUERIES --- */
         @media (max-width: 992px) {
             .hero-content h1 {

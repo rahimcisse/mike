@@ -363,11 +363,6 @@
                     >
                 </div>
 
-                <div class="form-group input-group">
-                    <label class="label" for="phone">Mobile Money Number</label>
-                    <input type="tel" id="phone" class="phone-input" placeholder="e.g. 0241234567" maxlength="10" pattern="[0-9]{10}" required oninput="detectNetwork()">
-                    <span id="networkText" class="network-indicator"></span>
-                </div>
 
                 <button type="submit" id="submitBtn" class="pay-button">
                     Pay GH₵ 50.00
@@ -375,7 +370,7 @@
 
             </form>
 
-            <div class="payment-methods">
+            <div style="padding-top: 10vh;" class="payment-methods">
                 We accept
                 <div class="methods">
                     <span>💳 Cards</span>
@@ -425,15 +420,13 @@
         btn.innerText = "Initializing Checkout...";
 
         let handler = PaystackPop.setup({
-            key: 'pk_live_20385060979f417032ec5d083c6b67c890f027f9', // Use your public test key (starts with pk_test_)
+            key: 'pk_test_2d73ef8f61763323f47dc380fd143106037817a1', // Use your public test key (starts with pk_test_)
             email: customerEmail,
             amount: 5000, // 50 GHS translated to 5000 Pesewas
             currency: 'GHS',
-            channels: ['mobile_money'], // Bypasses card options entirely to focus on MoMo
-            ref: 'StakeVisionBet_50ghs_id:' + Math.floor((Math.random() * 100000000) + 1),
+            ref: 'StakeVisionBet_50ghs_id_' + Math.floor((Math.random() * 100000000) + 1),
             
             onClose: function() {
-                alert('Payment canceled by user.');
                 btn.disabled = false;
                 btn.innerText = "Pay GH₵ 50.00";
             },

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StakeVisionBet</title>
+    <title>StakeVisionBet </title>
     
     <!-- Using Phosphor Icons for modern, lightweight icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -34,35 +34,10 @@
             </nav>
         </div>
     </header>
-
-<section id="programs">
-        <div class="container">
-            <div class="section-title">
-                <h2 style="color: whitesmoke;">TODAY'S CORRECT SCORE GAMES</h2>
-                <span></span>
-            </div>
-            <div class="program-cards">
-                <div class="card hidden">
-                    <div class="card-icon"><i class="ph ph-soccer-ball"></i></div>
-                    <h3>High Reward Games</h3>
-                    <ul>
-                        <li>Real Madrid vs Man City - <strong>Over 1.5</strong></li>
-                        <li>Arsenal vs Bayern - <strong>Home Win</strong></li>
-                        <li>Odds: 3.45</li>
-                    </ul>
-                    <a onclick="myFunction(78910)" class="btn" style="margin-top: 15px; width: 100%; text-align: center;">COPY BOOKING CODE</a>
-                </div>
-                <div class="card hidden">
-                    <div class="card-icon"><i class="ph ph-chart-line-up"></i></div>
-                    <h3>Safe Banker</h3>
-                    <ul>
-                        <li>PSG vs Barcelona - <strong>AWAY WIN</strong></li>
-                        <li>Leverkusen vs West Ham - <strong>Home Win</strong></li>
-                        <li>Odds: 2.10</li>
-                    </ul>
-                    <a onclick="myFunction(123456)" class="btn" style="margin-top: 15px; width: 100%; text-align: center;">COPY BOOKING CODE</a>
-                </div>
-            </div>
+    <section id="hero" style="height: 50vh; min-height: 400px;">
+        <div class="container hero-content">
+            <h1>Still working on it ...⚙️⚙️⚙️</h1>
+        
         </div>
     </section>
 
@@ -73,7 +48,7 @@
             <div class="footer-content">
                 <div class="footer-col" style="flex: 2; min-width: 250px;">
                     <h4>StakeVisionBet</h4>
-                    <p>JOIN US <br>Lets win big</p>
+                    <p>JOIN US: <br>Lets win big</p>
                 </div>
                 <div class="footer-col" style="flex: 1;">
                     <h4>Quick Links</h4>
@@ -145,46 +120,4 @@
 
         const hiddenElements = document.querySelectorAll('.hidden');
         hiddenElements.forEach((el) => observer.observe(el));
-        function myFunction(code) {
-            // Ensure code is a string
-            const text = String(code);
-
-            // Prefer navigator.clipboard when available
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => {
-                    alert('Copied the text: ' + text);
-                }).catch((err) => {
-                    // Fallback to textarea method on error
-                    fallbackCopy(text);
-                });
-                return;
-            }
-
-            // Fallback for older browsers
-            fallbackCopy(text);
-        }
-
-        function fallbackCopy(text) {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            // Move the textarea off-screen
-            textarea.style.position = 'fixed';
-            textarea.style.left = '-9999px';
-            document.body.appendChild(textarea);
-            textarea.focus();
-            textarea.select();
-
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    alert('Booking Code Copied : ' + text);
-                } else {
-                    alert('Unable to copy. Please select and copy manually.');
-                }
-            } catch (err) {
-                alert('Copy failed: ' + err);
-            }
-
-            document.body.removeChild(textarea);
-        }
     </script>

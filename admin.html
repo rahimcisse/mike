@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | StakeVisionBet</title>
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="index.css" rel="stylesheet">
+    <link rel="icon" href="icon.jpg" type="image/jpg">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.85)),
+                        url('bgg.jpg') center/cover no-repeat;
+            color: #fff;
+        }
+
+        header {
+            position: static;
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        .admin-login-page {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(15, 23, 42, 0.82);
+            border: 1px solid rgba(22, 222, 249, 0.4);
+            border-radius: 18px;
+            padding: 32px 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(8px);
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #16def9, #0f172a);
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .brand h1 {
+            font-size: 2rem;
+            margin: 0;
+            color: #fff;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: #dbeafe;
+            font-weight: 600;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            background: rgba(15, 23, 42, 0.9);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #16def9;
+            box-shadow: 0 0 0 3px rgba(22, 222, 249, 0.15);
+        }
+
+        .input-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        .error-msg {
+            display: block;
+            min-height: 20px;
+            margin-top: 7px;
+            color: #fca5a5;
+            font-size: 0.82rem;
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 8px;
+            border-radius: 10px;
+        }
+
+        .form-message {
+            margin-top: 16px;
+            min-height: 20px;
+            text-align: center;
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        .form-message.error {
+            color: #fca5a5;
+        }
+
+        .form-message.success {
+            color: #86efac;
+        }
+
+        @media (max-width: 600px) {
+            .login-card {
+                padding: 24px 18px;
+            }
+
+            .brand h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <p style="color: #16def9;">StakeVisionBet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <i class="ph ph-list"></i>
+                </div>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="todays_games.html">Todays games</a></li>
+                    <li><a href="past_wins.html">Past wins</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-login-page">
+        <section class="login-card">
+            <div class="brand">
+                <div class="brand-badge">SVB</div>
+                <h1>Admin Login</h1>
+            </div>
+
+            <form id="adminLoginForm" novalidate>
+                <div class="input-group">
+                    <label for="adminEmail">Email Address</label>
+                    <input type="email" id="adminEmail" name="email" placeholder="admin@gmail.com" required>
+                    <small class="error-msg" id="emailError"></small>
+                </div>
+
+                <div class="input-group">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" name="password" placeholder="Enter your password" required minlength="8">
+                    <small class="error-msg" id="passwordError"></small>
+                </div>
+
+                <button type="submit" class="btn">Login</button>
+                <p id="formMessage" class="form-message"></p>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col" style="flex: 2; min-width: 250px;">
+                    <h4>StakeVisionBet</h4>
+                    <p>JOIN US: <br>Lets win big</p>
+                </div>
+                <div class="footer-col" style="flex: 1;">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="todays_games.html">Todays Games</a></li>
+                        <li><a href="past_wins.html">Past Wins</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col" style="flex: 1;">
+                    <h4>Connect with us via</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="ph ph-linkedin-logo"></i></a>
+                        <a href="#"><i class="ph ph-twitter-logo"></i></a>
+                        <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                        <a href="#"><i class="ph ph-facebook-logo"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 StakeVisionBet -. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        const emailInput = document.getElementById('adminEmail');
+        const passwordInput = document.getElementById('adminPassword');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
+        const formMessage = document.getElementById('formMessage');
+
+        const validAdminEmailRahim = 'abdulrahimmogtaricisse@gmail.com' ;
+        const validAdminEmailMicheal = 'mic747605@gmail.com' ;
+        const validAdminEmailRichmond = 'richmondforson@gmail.com' ;
+        const validAdminPasswordRahim = 'Coolable_1';
+        const validAdminPasswordMicheal = '987654321';
+        const validAdminPasswordRichmond = '987654321';
+
+        function clearMessage() {
+            formMessage.textContent = '';
+            formMessage.className = 'form-message';
+        }
+
+        adminLoginForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            clearMessage();
+
+            let isValid = true;
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            emailError.textContent = '';
+            passwordError.textContent = '';
+
+            if (!email) {
+                emailError.textContent = 'Email is required.';
+                isValid = false;
+            } else if (!emailPattern.test(email)) {
+                emailError.textContent = 'Please enter a valid email address.';
+                isValid = false;
+            }
+
+            if (!password) {
+                passwordError.textContent = 'Password is required.';
+                isValid = false;
+            } else if (password.length < 8) {
+                passwordError.textContent = 'Password must be at least 8 characters long.';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            if (email === validAdminEmailRahim && password === validAdminPasswordRahim) {
+                formMessage.textContent = 'Login successful! Welcome back, Cisse.';
+                formMessage.className = 'form-message success';
+                window.location.href = '/dashboard.html'
+              
+            }
+            else if (email === validAdminEmailMicheal && password === validAdminPasswordMicheal) {
+                formMessage.textContent = 'Login successful! Welcome back, Micheal.';
+                formMessage.className = 'form-message success';
+                window.location.href = '/dashboard.html'
+                    
+            }
+            else if (email === validAdminEmailRichmond && passwordR === validAdminPasswordRichmond) {
+                formMessage.textContent = 'Login successful! Welcome back, Richmond.';
+                formMessage.className = 'form-message success';
+                window.location.href = '/dashboard.html'
+                    
+                
+            } else {
+                formMessage.textContent = 'Invalid email or password. Please try again.';
+                formMessage.className = 'form-message error';
+            }
+        });
+
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const navItems = document.querySelectorAll('.nav-links a');
+
+        if (hamburger && navLinks) {
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = hamburger.querySelector('i');
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('ph-list');
+                    icon.classList.add('ph-x');
+                } else {
+                    icon.classList.remove('ph-x');
+                    icon.classList.add('ph-list');
+                }
+            });
+        }
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    const icon = hamburger.querySelector('i');
+                    icon.classList.remove('ph-x');
+                    icon.classList.add('ph-list');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
