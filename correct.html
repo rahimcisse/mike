@@ -41,28 +41,7 @@
                 <h2 style="color: whitesmoke;">TODAY'S CORRECT SCORE GAMES</h2>
                 <span></span>
             </div>
-            <div class="program-cards">
-                <div class="card hidden">
-                    <div class="card-icon"><i class="ph ph-soccer-ball"></i></div>
-                    <h3>High Reward Games</h3>
-                    <ul>
-                        <li>Real Madrid vs Man City - <strong>Over 1.5</strong></li>
-                        <li>Arsenal vs Bayern - <strong>Home Win</strong></li>
-                        <li>Odds: 3.45</li>
-                    </ul>
-                    <a onclick="myFunction(78910)" class="btn" style="margin-top: 15px; width: 100%; text-align: center;">COPY BOOKING CODE</a>
-                </div>
-                <div class="card hidden">
-                    <div class="card-icon"><i class="ph ph-chart-line-up"></i></div>
-                    <h3>Safe Banker</h3>
-                    <ul>
-                        <li>PSG vs Barcelona - <strong>AWAY WIN</strong></li>
-                        <li>Leverkusen vs West Ham - <strong>Home Win</strong></li>
-                        <li>Odds: 2.10</li>
-                    </ul>
-                    <a onclick="myFunction(123456)" class="btn" style="margin-top: 15px; width: 100%; text-align: center;">COPY BOOKING CODE</a>
-                </div>
-            </div>
+            <div class="program-cards" id="program-cards"></div>
         </div>
     </section>
 
@@ -99,29 +78,54 @@
             </div>
         </div>
     </footer>
+    <script src="program-data.js"></script>
     <script>
-        // Mobile Menu Toggle
+        const programData = getProgramsData('correct');
+        const cardsRoot = document.getElementById('program-cards');
+
+        if (cardsRoot) {
+            const titleElement = document.querySelector('.section-title h2');
+            if (titleElement) {
+                titleElement.textContent = programData.title || "TODAY'S CORRECT SCORE GAMES";
+            }
+
+            cardsRoot.innerHTML = (programData.cards || []).map((card) => {
+                const items = (card.entries || []).map((entry) => `<li>${entry}</li>`).join('');
+                const icon = card.icon || 'ph ph-soccer-ball';
+                const code = card.code || '000000';
+
+                return `
+                    <div class="card hidden">
+                        <div class="card-icon"><i class="${icon}"></i></div>
+                        <h3>${card.title || 'Program Card'}</h3>
+                        <ul>${items}</ul>
+                        <a onclick="myFunction('${code}')" class="btn" style="margin-top: 15px; width: 100%; text-align: center;">COPY BOOKING CODE</a>
+                    </div>
+                `;
+            }).join('');
+        }
+
         const hamburger = document.getElementById('hamburger');
         const navLinks = document.getElementById('nav-links');
         const navItems = document.querySelectorAll('.nav-links a');
 
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            // Change icon based on state
-            const icon = hamburger.querySelector('i');
-            if (navLinks.classList.contains('active')) {
-                icon.classList.remove('ph-list');
-                icon.classList.add('ph-x');
-            } else {
-                icon.classList.remove('ph-x');
-                icon.classList.add('ph-list');
-            }
-        });
+        if (hamburger && navLinks) {
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = hamburger.querySelector('i');
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('ph-list');
+                    icon.classList.add('ph-x');
+                } else {
+                    icon.classList.remove('ph-x');
+                    icon.classList.add('ph-list');
+                }
+            });
+        }
 
-        // Close mobile menu when a link is clicked
         navItems.forEach(item => {
             item.addEventListener('click', () => {
-                if (navLinks.classList.contains('active')) {
+                if (navLinks && navLinks.classList.contains('active')) {
                     navLinks.classList.remove('active');
                     const icon = hamburger.querySelector('i');
                     icon.classList.remove('ph-x');
@@ -130,11 +134,7 @@
             });
         });
 
-        // Scroll Reveal Animation
-        const observerOptions = {
-            threshold: 0.1
-        };
-
+        const observerOptions = { threshold: 0.1 };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -145,29 +145,25 @@
 
         const hiddenElements = document.querySelectorAll('.hidden');
         hiddenElements.forEach((el) => observer.observe(el));
+
         function myFunction(code) {
-            // Ensure code is a string
             const text = String(code);
 
-            // Prefer navigator.clipboard when available
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(() => {
                     alert('Copied the text: ' + text);
-                }).catch((err) => {
-                    // Fallback to textarea method on error
+                }).catch(() => {
                     fallbackCopy(text);
                 });
                 return;
             }
 
-            // Fallback for older browsers
             fallbackCopy(text);
         }
 
         function fallbackCopy(text) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
-            // Move the textarea off-screen
             textarea.style.position = 'fixed';
             textarea.style.left = '-9999px';
             document.body.appendChild(textarea);

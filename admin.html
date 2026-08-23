@@ -179,7 +179,7 @@
 
                 <div class="input-group">
                     <label for="adminPassword">Password</label>
-                    <input type="password" id="adminPassword" name="password" placeholder="Enter your password" required minlength="8">
+                    <input type="password" id="adminPassword" name="password" placeholder="Enter your password" required minlength="6">
                     <small class="error-msg" id="passwordError"></small>
                 </div>
 
@@ -264,8 +264,8 @@
             if (!password) {
                 passwordError.textContent = 'Password is required.';
                 isValid = false;
-            } else if (password.length < 8) {
-                passwordError.textContent = 'Password must be at least 8 characters long.';
+            } else if (password.length < 6) {
+                passwordError.textContent = 'Password must be at least 6 characters long.';
                 isValid = false;
             }
 
@@ -276,19 +276,19 @@
             if (email === validAdminEmailRahim && password === validAdminPasswordRahim) {
                 formMessage.textContent = 'Login successful! Welcome back, Cisse.';
                 formMessage.className = 'form-message success';
-                window.location.href = '/dashboard.html'
+                window.location.href = '/welcomeadmin.html'
               
             }
             else if (email === validAdminEmailMicheal && password === validAdminPasswordMicheal) {
                 formMessage.textContent = 'Login successful! Welcome back, Micheal.';
                 formMessage.className = 'form-message success';
-                window.location.href = '/dashboard.html'
+                window.location.href = '/welcomeadmin.html'
                     
             }
             else if (email === validAdminEmailRichmond && passwordR === validAdminPasswordRichmond) {
                 formMessage.textContent = 'Login successful! Welcome back, Richmond.';
                 formMessage.className = 'form-message success';
-                window.location.href = '/dashboard.html'
+                window.location.href = '/welcomeadmin.html'
                     
                 
             } else {
