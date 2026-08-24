@@ -46,3 +46,10 @@
 #  FIREBASE_STORAGE_BUCKET = "your_project.appspot.com"
 #  FIREBASE_MESSAGING_SENDER_ID = "..."
 #  FIREBASE_APP_ID = "..."
+
+## Content Security Policy
+## NOTE: Allowing 'unsafe-eval' weakens CSP. Prefer removing eval-usage or hosting non-eval builds.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://firestore.googleapis.com https://*.googleapis.com wss:; font-src 'self' https://fonts.gstatic.com data:;"
