@@ -211,6 +211,15 @@
         const normalized = normalizeProgramPayload(payload || defaultPayload);
         window.__programPayload = normalized;
         console.debug('[DEBUG] setProgramPayload:', normalized && normalized.title, 'pages:', Object.keys(normalized.pages || {}).length);
+        // update on-page debug overlay if present
+        try {
+            const dbg = document.getElementById('__programs_debug_overlay');
+            if (dbg) {
+                dbg.innerText = `Firebase:${typeof firebase} firestore:${!!(window.firebase && window.firebase.firestore)} | Title:${normalized.title} | Pages:${Object.keys(normalized.pages||{}).length}`;
+            }
+        } catch (e) {
+            // ignore
+        }
         return normalized;
     }
 
@@ -228,7 +237,27 @@
             // Check if Firebase is available
             if (typeof firebase === 'undefined' || !firebase.firestore) {
                 console.warn('Firebase not initialized or firestore missing, using local defaults');
-                return getProgramsData(pageKey);
+                const data = getProgramsData(pageKey);
+                // ensure overlay shows the fallback data summary
+                try {
+                    let dbg = document.getElementById('__programs_debug_overlay');
+                    if (!dbg) {
+                        dbg = document.createElement('div');
+                        dbg.id = '__programs_debug_overlay';
+                        dbg.style.position = 'fixed';
+                        dbg.style.right = '12px';
+                        dbg.style.top = '12px';
+                        dbg.style.padding = '8px 10px';
+                        dbg.style.background = 'rgba(0,0,0,0.6)';
+                        dbg.style.color = '#fff';
+                        dbg.style.fontSize = '12px';
+                        dbg.style.zIndex = 999999;
+                        dbg.style.borderRadius = '6px';
+                        document.body.appendChild(dbg);
+                    }
+                    dbg.innerText = `Firebase:undefined firestore:false | Using local defaults | Page:${pageKey} | Cards:${(data.cards||[]).length}`;
+                } catch (e) {}
+                return data;
             }
 
             const db = firebase.firestore();
@@ -238,6 +267,24 @@
             if (docSnapshot.exists) {
                 const payload = docSnapshot.data();
                 const normalized = setProgramPayload(payload);
+                try {
+                    let dbg = document.getElementById('__programs_debug_overlay');
+                    if (!dbg) {
+                        dbg = document.createElement('div');
+                        dbg.id = '__programs_debug_overlay';
+                        dbg.style.position = 'fixed';
+                        dbg.style.right = '12px';
+                        dbg.style.top = '12px';
+                        dbg.style.padding = '8px 10px';
+                        dbg.style.background = 'rgba(0,0,0,0.6)';
+                        dbg.style.color = '#fff';
+                        dbg.style.fontSize = '12px';
+                        dbg.style.zIndex = 999999;
+                        dbg.style.borderRadius = '6px';
+                        document.body.appendChild(dbg);
+                    }
+                    dbg.innerText = `Firebase:available firestore:true | Page:${pageKey} | Cards:${(normalized.pages && normalized.pages[pageKey] && normalized.pages[pageKey].cards? normalized.pages[pageKey].cards.length : 0)}`;
+                } catch (e) {}
                 return normalized.pages[pageKey] || getProgramsData(pageKey);
             } else {
                 console.warn('Programs document not found in Firestore; falling back to local defaults');
