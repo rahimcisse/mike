@@ -7,6 +7,8 @@
     
     <!-- Using Phosphor Icons for modern, lightweight icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
     <link href='index.css' rel='stylesheet'>
     <link rel="icon" href="icon.jpg" type="image/jpg">
     <style>
@@ -78,31 +80,42 @@
             </div>
         </div>
     </footer>
-    <script src="program-data.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="program-data-firebase.js"></script>
     <script>
-        const programData = getProgramsData();
+        const pageKey = 'acca';
         const cardsRoot = document.getElementById('acca-program-cards');
 
-        if (cardsRoot) {
-            const titleElement = document.querySelector('.section-title h2');
-            if (titleElement) {
-                titleElement.textContent = programData.title || "TODAY'S ACCA GAMES";
+        async function renderPage() {
+            const programData = await refreshProgramsData(pageKey);
+            if (cardsRoot) {
+                const titleElement = document.querySelector('.section-title h2');
+                if (titleElement) {
+                    titleElement.textContent = programData.title || "TODAY'S ACCA GAMES";
+                }
+
+                cardsRoot.innerHTML = (programData.cards || []).map((card) => {
+                    const items = (card.entries || []).map((entry) => `<li>${entry}</li>`).join('');
+                    const icon = card.icon || 'ph ph-soccer-ball';
+                    const code = card.code || '000000';
+
+                    return `
+                        <div class="card hidden">
+                            <div class="card-icon"><i class="${icon}"></i></div>
+                            <h3>${card.title || 'Program Card'}</h3>
+                            <ul>${items}</ul>
+                            <a onclick="myFunction('${code}')" class="btn" style="margin-top: 15px; width: 100%; text-align: center;">COPY BOOKING CODE</a>
+                        </div>
+                    `;
+                }).join('');
+
+                // Observe hidden cards for scroll reveal
+                try {
+                    const hiddenCards = document.querySelectorAll('.card.hidden');
+                    hiddenCards.forEach((el) => observer.observe(el));
+                } catch (e) {}
             }
 
-            cardsRoot.innerHTML = (programData.cards || []).map((card) => {
-                const items = (card.entries || []).map((entry) => `<li>${entry}</li>`).join('');
-                const icon = card.icon || 'ph ph-soccer-ball';
-                const code = card.code || '000000';
-
-                return `
-                    <div class="card hidden">
-                        <div class="card-icon"><i class="${icon}"></i></div>
-                        <h3>${card.title || 'Program Card'}</h3>
-                        <ul>${items}</ul>
-                        <a onclick="myFunction('${code}')" class="btn" style="margin-top: 15px; width: 100%; text-align: center;">COPY BOOKING CODE</a>
-                    </div>
-                `;
-            }).join('');
         }
 
         // Mobile Menu Toggle
@@ -148,8 +161,7 @@
             });
         }, observerOptions);
 
-        const hiddenElements = document.querySelectorAll('.hidden');
-        hiddenElements.forEach((el) => observer.observe(el));
+        renderPage();
 
         function myFunction(code) {
             const text = String(code);

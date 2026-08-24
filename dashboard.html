@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StakeVisionBet | Dashboard</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
     <link href='index.css' rel='stylesheet'>
     <link rel="icon" href="icon.jpg" type="image/jpg">
     <style>
@@ -33,7 +35,6 @@
             font-weight: 600;
         }
         .field input,
-        .field select,
         .field textarea {
             border: 1px solid rgba(255,255,255,0.15);
             border-radius: 10px;
@@ -45,10 +46,6 @@
         .field textarea {
             min-height: 110px;
             resize: vertical;
-        }
-        .field select option {
-            background: #0f172a;
-            color: #fff;
         }
         .admin-card {
             background: rgba(17, 24, 39, 0.9);
@@ -128,7 +125,7 @@
                     <li><a href="elite.html"> Elite</a></li>
                     <li><a href="golden.html">Golden</a></li>
                     <li><a href="nba.html">NBA</a></li>
-                    <li><a href="dashboard.html">Edit Games</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
                 </ul>
             </nav>
         </div>
@@ -137,19 +134,19 @@
     <section class="admin-panel">
         <div class="container">
             <div class="admin-box">
-                <h1 id="page-heading" style="margin-bottom: 12px; color: #16def9;">UPDATE GAMES</h1>
-                <p id="page-description" style="margin-bottom: 25px; color: #dbeafe;">Edit the games below and save.</p>
+                <h1 style="margin-bottom: 12px; color: #16def9;">UPDATE PROGRAM CARDS</h1>
+                <p style="margin-bottom: 25px; color: #dbeafe;">Choose a page from the dropdown, edit the cards below, and save. The card design stays the same while the content updates.</p>
 
                 <form id="program-form" class="admin-form">
                     <div class="field">
-                        <label for="page-select">Choose type games to edit</label>
-                        <select id="page-select">
+                        <label for="page-select">Choose page to edit</label>
+                        <select id="page-select" style="padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); color: #f8f3f3; font: inherit;">
                             <option value="acca">ACCA</option>
+                            <option value="draw">Draw</option>
                             <option value="correct">Correct Score</option>
-                            <option value="draw">Draw Games </option>
                             <option value="elite">Elite</option>
-                            <option value="golden">Golden </option>
-                            <option value="nba">NBA </option>
+                            <option value="golden">Golden</option>
+                            <option value="nba">NBA</option>
                         </select>
                     </div>
 
@@ -163,7 +160,10 @@
                     <div class="button-row">
                         <button type="button" id="add-card" class="secondary-btn">+ Add card</button>
                         <button type="submit" class="primary-btn">Save changes</button>
-                        <button type="button" id="preview-btn" class="ghost-btn">Preview page</button>
+                        <button type="button" id="preview-btn" class="ghost-btn">Preview selected page</button>
+                        <button type="button" id="export-json" class="secondary-btn">Export JSON</button>
+                        <button type="button" id="import-json-btn" class="ghost-btn">Import JSON</button>
+                        <input id="import-json-file" type="file" accept="application/json" hidden>
                     </div>
                 </form>
             </div>
@@ -202,27 +202,20 @@
         </div>
     </footer>
 
-    <script src="program-data.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="program-data-firebase.js"></script>
     <script>
-        const PAGE_CONFIG = {
-            acca: { label: 'ACCA', file: 'acca.html', defaultTitle: "TODAY'S ACCA GAMES" },
-            correct: { label: 'Correct Score', file: 'correct.html', defaultTitle: "TODAY'S CORRECT SCORE GAMES" },
-            draw: { label: 'Draw Games', file: 'draw.html', defaultTitle: "TODAY'S DRAW GAMES" },
-            elite: { label: 'Elite', file: 'elite.html', defaultTitle: "TODAY'S ELITE GAMES" },
-            golden: { label: 'Golden', file: 'golden.html', defaultTitle: "TODAY'S GOLDEN GAMES" },
-            nba: { label: 'NBA', file: 'nba.html', defaultTitle: "TODAY'S NBA GAMES" }
-        };
-
         const pageSelect = document.getElementById('page-select');
-        const pageHeading = document.getElementById('page-heading');
-        const pageDescription = document.getElementById('page-description');
         const cardList = document.getElementById('card-list');
         const form = document.getElementById('program-form');
         const titleInput = document.getElementById('program-title');
         const previewButton = document.getElementById('preview-btn');
         const addCardButton = document.getElementById('add-card');
+        const exportJsonButton = document.getElementById('export-json');
+        const importJsonButton = document.getElementById('import-json-btn');
+        const importJsonInput = document.getElementById('import-json-file');
 
-        function getSelectedPageKey() {
+        function getCurrentPageKey() {
             return pageSelect.value || 'acca';
         }
 
@@ -235,11 +228,11 @@
                     <button type="button" class="remove-card">Remove</button>
                 </div>
                 <div class="field">
-                    <label>Games title</label>
+                    <label>Card title</label>
                     <input type="text" class="card-title" value="${(card.title || '').replace(/"/g, '&quot;')}" placeholder="High Reward Games">
                 </div>
                 <div class="field">
-                    <label>Icon(Dont change)</label>
+                    <label>Icon class</label>
                     <input type="text" class="card-icon" value="${(card.icon || 'ph ph-soccer-ball').replace(/"/g, '&quot;')}" placeholder="ph ph-soccer-ball">
                 </div>
                 <div class="field">
@@ -247,7 +240,7 @@
                     <input type="text" class="card-code" value="${(card.code || '').replace(/"/g, '&quot;')}" placeholder="123456">
                 </div>
                 <div class="field">
-                    <label>Games and odds(one game per line)</label>
+                    <label>Card lines (one per line)</label>
                     <textarea class="card-lines">${((card.entries || []).join('\n')).replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
                 </div>
             `;
@@ -259,15 +252,13 @@
             return wrapper;
         }
 
-        function loadProgramData() {
-            const pageKey = getSelectedPageKey();
-            const config = PAGE_CONFIG[pageKey] || PAGE_CONFIG.acca;
-            const data = getProgramsData(pageKey);
+        async function loadProgramData() {
+            const pageKey = getCurrentPageKey();
+            const data = await refreshProgramsData(pageKey);
+            const config = window.PROGRAM_PAGE_CONFIG || {};
+            const selectedConfig = config[pageKey] || { title: "TODAY'S PROGRAMS" };
 
-            pageHeading.textContent = `UPDATE ${config.label.toUpperCase()} GAMES`;
-            pageDescription.textContent = `Edit ${config.label} `;
-            titleInput.value = data.title || config.defaultTitle;
-            titleInput.placeholder = config.defaultTitle;
+            titleInput.value = data.title || selectedConfig.title || 'TODAY\'S PROGRAMS';
             cardList.innerHTML = '';
 
             (data.cards || []).forEach((card, index) => {
@@ -304,7 +295,7 @@
             });
 
             return {
-                title: titleInput.value.trim() || "TODAY'S ACCA GAMES",
+                title: titleInput.value.trim() || 'TODAY\'S PROGRAMS',
                 cards
             };
         }
@@ -318,19 +309,62 @@
             }, cardList.children.length));
         });
 
-        form.addEventListener('submit', (event) => {
+        form.addEventListener('submit', async (event) => {
             event.preventDefault();
-            const pageKey = getSelectedPageKey();
-            const config = PAGE_CONFIG[pageKey] || PAGE_CONFIG.acca;
+            const pageKey = getCurrentPageKey();
             const data = collectProgramData();
-            localStorage.setItem(getStorageKey(pageKey), JSON.stringify(data));
-            alert(`${config.label} card content saved successfully. Open the ${config.label} page to preview the updated cards.`);
+
+            try {
+                console.log('Saving page:', pageKey, data);
+                if (typeof window.saveProgramPage === 'function') {
+                    await window.saveProgramPage(pageKey, data);
+                } else {
+                    alert('Save API is unavailable.');
+                    return;
+                }
+
+                const pageLabel = (window.PROGRAM_PAGE_CONFIG && window.PROGRAM_PAGE_CONFIG[pageKey] && window.PROGRAM_PAGE_CONFIG[pageKey].label) || 'Selected page';
+                alert(`${pageLabel} card content saved to programs.json successfully. Open the ${pageLabel} page to preview the updated cards.`);
+            } catch (error) {
+                console.error('Form submission error:', error);
+                alert('Error: ' + (error.message || 'Could not save to programs.json'));
+            }
         });
 
         previewButton.addEventListener('click', () => {
-            const pageKey = getSelectedPageKey();
-            const config = PAGE_CONFIG[pageKey] || PAGE_CONFIG.acca;
-            window.open(config.file, '_blank');
+            const pageKey = getCurrentPageKey();
+            window.open(`${pageKey}.html`, '_blank');
+        });
+
+        exportJsonButton.addEventListener('click', () => {
+            if (typeof window.exportProgramsDataFile === 'function') {
+                window.exportProgramsDataFile();
+                alert('JSON file exported to your downloads folder.');
+            } else {
+                alert('JSON export is unavailable in this browser.');
+            }
+        });
+
+        importJsonButton.addEventListener('click', () => {
+            importJsonInput.click();
+        });
+
+        importJsonInput.addEventListener('change', (event) => {
+            const [file] = event.target.files || [];
+            if (!file) return;
+
+            if (typeof window.importProgramsDataFile === 'function') {
+                window.importProgramsDataFile(file)
+                    .then(() => {
+                        loadProgramData();
+                        alert('JSON file imported successfully.');
+                    })
+                    .catch((error) => {
+                        alert(error.message || 'Could not import JSON file.');
+                    });
+            }
+
+            importJsonInput.value = '';
         });
 
         pageSelect.addEventListener('change', loadProgramData);

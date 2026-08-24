@@ -1,4 +1,5 @@
 (function () {
+    console.debug('[DEBUG] program-data-firebase.js loaded. firebase typeof:', typeof firebase, 'firestore available:', !!(window.firebase && window.firebase.firestore));
     const pageConfig = {
         acca: {
             title: "TODAY'S ACCA GAMES",
@@ -209,6 +210,16 @@
     function setProgramPayload(payload) {
         const normalized = normalizeProgramPayload(payload || defaultPayload);
         window.__programPayload = normalized;
+        console.debug('[DEBUG] setProgramPayload:', normalized && normalized.title, 'pages:', Object.keys(normalized.pages || {}).length);
+        // update on-page debug overlay if present
+        try {
+            const dbg = document.getElementById('__programs_debug_overlay');
+            if (dbg) {
+                dbg.innerText = `Firebase:${typeof firebase} firestore:${!!(window.firebase && window.firebase.firestore)} | Title:${normalized.title} | Pages:${Object.keys(normalized.pages||{}).length}`;
+            }
+        } catch (e) {
+            // ignore
+        }
         return normalized;
     }
 
@@ -216,56 +227,94 @@
         const payload = window.__programPayload || setProgramPayload(defaultPayload);
         const config = getPageConfig(pageKey);
         const pageData = payload.pages && payload.pages[pageKey];
+        console.debug('[DEBUG] getProgramsData for', pageKey, 'has pageData:', !!pageData);
         return pageData || normalizeProgramData({ title: config.title, cards: config.defaultCards }, config.defaultCards);
     }
 
     async function refreshProgramsData(pageKey = 'acca') {
+        console.debug('[DEBUG] refreshProgramsData called for', pageKey);
         try {
-            const response = await fetch('/api/programs', { cache: 'no-store' });
-            if (!response.ok) {
-                throw new Error('Could not load programs.json');
+            // Check if Firebase is available
+            if (typeof firebase === 'undefined' || !firebase.firestore) {
+                console.warn('Firebase not initialized or firestore missing, using local defaults');
+                const data = getProgramsData(pageKey);
+                // ensure overlay shows the fallback data summary
+                try {
+                    let dbg = document.getElementById('__programs_debug_overlay');
+                    if (!dbg) {
+                        dbg = document.createElement('div');
+                        dbg.id = '__programs_debug_overlay';
+                        dbg.style.position = 'fixed';
+                        dbg.style.right = '12px';
+                        dbg.style.top = '12px';
+                        dbg.style.padding = '8px 10px';
+                        dbg.style.background = 'rgba(0,0,0,0.6)';
+                        dbg.style.color = '#fff';
+                        dbg.style.fontSize = '12px';
+                        dbg.style.zIndex = 999999;
+                        dbg.style.borderRadius = '6px';
+                        document.body.appendChild(dbg);
+                    }
+                    dbg.innerText = `Firebase:undefined firestore:false | Using local defaults | Page:${pageKey} | Cards:${(data.cards||[]).length}`;
+                } catch (e) {}
+                return data;
             }
-            const result = await response.json();
-            const payload = result.data || result;
-            const normalized = setProgramPayload(payload);
-            return normalized.pages[pageKey] || getProgramsData(pageKey);
+
+            const db = firebase.firestore();
+            const docRef = db.collection('config').doc('programs');
+            const docSnapshot = await docRef.get();
+
+            if (docSnapshot.exists) {
+                const payload = docSnapshot.data();
+                const normalized = setProgramPayload(payload);
+                try {
+                    let dbg = document.getElementById('__programs_debug_overlay');
+                    if (!dbg) {
+                        dbg = document.createElement('div');
+                        dbg.id = '__programs_debug_overlay';
+                        dbg.style.position = 'fixed';
+                        dbg.style.right = '12px';
+                        dbg.style.top = '12px';
+                        dbg.style.padding = '8px 10px';
+                        dbg.style.background = 'rgba(0,0,0,0.6)';
+                        dbg.style.color = '#fff';
+                        dbg.style.fontSize = '12px';
+                        dbg.style.zIndex = 999999;
+                        dbg.style.borderRadius = '6px';
+                        document.body.appendChild(dbg);
+                    }
+                    dbg.innerText = `Firebase:available firestore:true | Page:${pageKey} | Cards:${(normalized.pages && normalized.pages[pageKey] && normalized.pages[pageKey].cards? normalized.pages[pageKey].cards.length : 0)}`;
+                } catch (e) {}
+                return normalized.pages[pageKey] || getProgramsData(pageKey);
+            } else {
+                console.warn('Programs document not found in Firestore; falling back to local defaults');
+                return getProgramsData(pageKey);
+            }
         } catch (error) {
-            console.warn('Failed to read programs.json, using defaults instead.', error);
+            console.warn('Failed to load from Firestore, using local defaults:', error && error.message ? error.message : error);
             return getProgramsData(pageKey);
         }
     }
 
     async function saveProgramPage(pageKey, data) {
-        const currentPayload = window.__programPayload || setProgramPayload(defaultPayload);
-        const config = getPageConfig(pageKey);
-        const pageData = normalizeProgramData(data, config.defaultCards);
-        currentPayload.pages[pageKey] = pageData;
-
         try {
-            const response = await fetch('/api/programs', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(currentPayload)
-            });
-
-            let result = null;
-            try {
-                const text = await response.text();
-                if (text && text.trim()) {
-                    result = JSON.parse(text);
-                }
-            } catch (parseErr) {
-                console.error('Failed to parse response:', parseErr);
-                result = null;
-            }
-            
-            if (!response.ok) {
-                const errorMsg = (result && result.error) || 'Server returned an error';
-                throw new Error(errorMsg);
+            if (typeof firebase === 'undefined' || !firebase.firestore) {
+                throw new Error('Firebase not initialized');
             }
 
-            const normalized = setProgramPayload((result && result.data) || currentPayload);
-            console.log('Successfully saved page:', pageKey);
+            const db = firebase.firestore();
+            const docRef = db.collection('config').doc('programs');
+
+            const currentPayload = window.__programPayload || setProgramPayload(defaultPayload);
+            const config = getPageConfig(pageKey);
+            const pageData = normalizeProgramData(data, config.defaultCards);
+            currentPayload.pages[pageKey] = pageData;
+            currentPayload.lastUpdated = new Date().toISOString();
+
+            await docRef.set(currentPayload);
+
+            const normalized = setProgramPayload(currentPayload);
+            console.log('Successfully saved page to Firestore:', pageKey);
             return normalized.pages[pageKey];
         } catch (error) {
             console.error('Save error:', error);
@@ -294,29 +343,18 @@
                     const normalized = normalizeProgramPayload(imported);
                     window.__programPayload = normalized;
 
-                    const response = await fetch('/api/programs', {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(normalized)
-                    });
-
-                    let result = null;
-                    try {
-                        const text = await response.text();
-                        if (text && text.trim()) {
-                            result = JSON.parse(text);
-                        }
-                    } catch (parseErr) {
-                        console.error('Failed to parse import response:', parseErr);
+                    if (typeof firebase === 'undefined' || !firebase.firestore) {
+                        throw new Error('Firebase not initialized');
                     }
 
-                    if (!response.ok) {
-                        const errorMsg = (result && result.error) || 'Failed to save imported data';
-                        throw new Error(errorMsg);
-                    }
+                    const db = firebase.firestore();
+                    const docRef = db.collection('config').doc('programs');
+                    normalized.lastUpdated = new Date().toISOString();
+                    
+                    await docRef.set(normalized);
                     resolve(normalized);
                 } catch (error) {
-                    reject(new Error('Invalid JSON file or save failed: ' + error.message));
+                    reject(new Error('Invalid JSON file or Firestore save failed: ' + error.message));
                 }
             };
             reader.onerror = () => {
