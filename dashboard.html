@@ -324,7 +324,7 @@
                 }
 
                 const pageLabel = (window.PROGRAM_PAGE_CONFIG && window.PROGRAM_PAGE_CONFIG[pageKey] && window.PROGRAM_PAGE_CONFIG[pageKey].label) || 'Selected page';
-                alert(`${pageLabel} card content saved to programs.json successfully. Open the ${pageLabel} page to preview the updated cards.`);
+                alert(`${pageLabel} page successfully. Open the ${pageLabel} page to preview the updated page.`);
             } catch (error) {
                 console.error('Form submission error:', error);
                 alert('Error: ' + (error.message || 'Could not save to programs.json'));

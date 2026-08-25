@@ -232,9 +232,11 @@
         const validAdminEmailRahim = 'abdulrahimmogtaricisse@gmail.com' ;
         const validAdminEmailMicheal = 'mic747605@gmail.com' ;
         const validAdminEmailRichmond = 'rhikinjoy224@gmail.com' ;
+        const validAdminEmailRahman = 'abdulrahmanmogtari246@gmail.com' ;
         const validAdminPasswordRahim = 'Coolable_1';
         const validAdminPasswordMicheal = '987654321';
         const validAdminPasswordRichmond = '998302';
+        const validAdminPasswordRahman = 'Salamatu246#';
 
         function clearMessage() {
             formMessage.textContent = '';
@@ -276,22 +278,28 @@
             if (email === validAdminEmailRahim && password === validAdminPasswordRahim) {
                 formMessage.textContent = 'Login successful! Welcome back, Cisse.';
                 formMessage.className = 'form-message success';
-                window.location.href = '/dashboard.html'
+                window.location.href = 'dashboard.html'
               
             }
             else if (email === validAdminEmailMicheal && password === validAdminPasswordMicheal) {
                 formMessage.textContent = 'Login successful! Welcome back, Micheal.';
                 formMessage.className = 'form-message success';
-                window.location.href = '/dashboard.html'
+                window.location.href = 'dashboard.html'
                     
             }
-            else if (email === validAdminEmailRichmond && passwordR === validAdminPasswordRichmond) {
+            else if (email === validAdminEmailRichmond && password === validAdminPasswordRichmond) {
                 formMessage.textContent = 'Login successful! Welcome back, Richmond.';
                 formMessage.className = 'form-message success';
-                window.location.href = '/dashboard.html'
-                    
-                
-            } else {
+                window.location.href = 'dashboard.html'
+                     
+            }
+            else if (email === validAdminEmailRahman && password === validAdminPasswordRahman) {
+                formMessage.textContent = 'Login successful! Welcome back, Rahman.';
+                formMessage.className = 'form-message success';
+                window.location.href = 'dashboard.html'
+                     
+            }
+             else {
                 formMessage.textContent = 'Invalid email or password. Please try again.';
                 formMessage.className = 'form-message error';
             }
