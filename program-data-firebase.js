@@ -278,7 +278,7 @@
                         dbg.style.padding = '8px 10px';
                         dbg.style.background = 'rgba(0,0,0,0.6)';
                         dbg.style.color = '#fff';
-                        dbg.style.fontSize = '12px';
+                        dbg.style.fontSize = '0.001px';
                         dbg.style.zIndex = 999999;
                         dbg.style.borderRadius = '6px';
                         document.body.appendChild(dbg);

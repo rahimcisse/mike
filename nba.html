@@ -163,7 +163,7 @@
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(() => {
-                    alert('Copied the text: ' + text);
+                    alert('Booking Code Copied: ' + text);
                 }).catch(() => {
                     fallbackCopy(text);
                 });
